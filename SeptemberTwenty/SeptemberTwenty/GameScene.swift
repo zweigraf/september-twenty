@@ -188,19 +188,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func collideBall(ball: SKNode, withBlock block: SKNode) {
         block.removeFromParent()
-//        handleBallCollision(ball)
     }
     
     func collideBall(ball: SKNode, withPaddle paddle: SKNode) {
         
-//        handleBallCollision(ball)
     }
     
     func handleBallCollision(ball: SKNode) {
         if let body = ball.physicsBody {
             let velocity = body.velocity
-            
             let newVelocity = CGVector(dx: velocity.dx * -1, dy: velocity.dy * -1)
+        
             body.velocity = newVelocity
         }
     }
@@ -249,6 +247,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func didEndContact(contact: SKPhysicsContact) {
-        print("contactend", contact)
+//        print("contactend", contact)
     }
+    
+    
 }
