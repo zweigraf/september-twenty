@@ -25,7 +25,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let BlockRowCount = 4
     let BallPaddleOffset = 100
     
-    let BallStartVelocity = CGVector(dx: 0, dy: 300)
+    let BallStartVelocity = CGVector(dx: 50, dy: 300)
     
     let PaddleName = "paddle"
     let BlockName = "block"
@@ -34,6 +34,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let PaddleCategory : UInt32 = 1 << 0
     let BlockCategory : UInt32 = 1 << 1
     let BallCategory : UInt32 = 1 << 2
+    let WallsCategory : UInt32 = 1 << 3
     
     weak var paddle : SKNode?
     
@@ -41,6 +42,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func didMoveToView(view: SKView) {
         scaleMode = .AspectFit
+        
+        addWalls()
         addGrid()
         
         addPaddle()
@@ -75,6 +78,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     // MARK: SKNode Creation
+    
+    func addWalls() {
+        // just normal walls for the ball to reflect from
+        let walls = SKPhysicsBody(edgeLoopFromRect: self.frame)
+        walls.categoryBitMask = WallsCategory
+        walls.collisionBitMask = BallCategory
+        walls.friction = 0.0
+        walls.restitution = 1.0
+        self.physicsBody = walls
+    }
     
     func addGrid() {
         let grid = GridGenerator.createGrid(self.frame, step: 50)
@@ -147,9 +160,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             ballBody.restitution = 0.0
             ballBody.linearDamping = 0.0
             ballBody.angularDamping = 0.0
+            ballBody.friction = 0.0
             
             ballBody.categoryBitMask = BallCategory
-            ballBody.collisionBitMask = 0x0
+            ballBody.collisionBitMask = WallsCategory
             ballBody.contactTestBitMask = PaddleCategory | BlockCategory
             ballBody.usesPreciseCollisionDetection = true
             
