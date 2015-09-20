@@ -11,9 +11,7 @@ import SpriteKit
 class GameScene: SKScene {
     override func didMoveToView(view: SKView) {
         scaleMode = .AspectFit
-        let grid = GridGenerator.createGrid(self.frame, step: 50)
-        grid.zPosition = -1
-        addChild(grid)
+        addGrid()
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -28,5 +26,11 @@ class GameScene: SKScene {
    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
+    }
+    
+    func addGrid() {
+        let grid = GridGenerator.createGrid(self.frame, step: 50)
+        grid.zPosition = -1
+        addChild(grid)
     }
 }
