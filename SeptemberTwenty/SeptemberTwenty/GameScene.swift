@@ -8,7 +8,7 @@
 
 import SpriteKit
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate {
     let PaddleColor = UIColor.redColor().colorWithAlphaComponent(0.5)
     let BlockColor = UIColor.greenColor().colorWithAlphaComponent(0.5)
     let BallColor = UIColor.blueColor().colorWithAlphaComponent(0.5)
@@ -30,6 +30,9 @@ class GameScene: SKScene {
     let BlockName = "block"
     let BallName = "ball"
     
+    let PaddleCategory : UInt32 = 1 << 0
+    let BlockCategory : UInt32 = 1 << 1
+    let BallCategory : UInt32 = 1 << 2
     
     weak var paddle : SKNode?
     
@@ -39,6 +42,8 @@ class GameScene: SKScene {
         
         addPaddle()
         addBlocks()
+        
+        self.physicsWorld.contactDelegate = self
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: Selector("addBall"))
         tapRecognizer.numberOfTapsRequired = 2
@@ -75,6 +80,18 @@ class GameScene: SKScene {
     func addPaddle() {
         let paddle = SKSpriteNode(color: PaddleColor, size: PaddleSize)
         paddle.position = CGPoint(x: Int(CGRectGetMidX(self.frame)), y: PaddleBottomOffset)
+        
+        paddle.name = PaddleName
+        
+        let paddleBody = SKPhysicsBody(rectangleOfSize: PaddleSize)
+        paddleBody.affectedByGravity = false
+        paddleBody.categoryBitMask = PaddleCategory
+        paddleBody.collisionBitMask = BallCategory
+        paddleBody.contactTestBitMask = BallCategory
+        paddleBody.dynamic = false
+        
+        paddle.physicsBody = paddleBody
+        
         addChild(paddle)
         self.paddle = paddle
     }
@@ -94,7 +111,18 @@ class GameScene: SKScene {
             for var x = xOfFirstBlock; x <= xOfLastBlock; x += BlockSize.width {
                 let block = SKSpriteNode(color: BlockColor, size: BlockSize)
                 block.position = CGPoint(x: x, y: y)
+                
                 block.name = BlockName;
+                
+                let blockBody = SKPhysicsBody(rectangleOfSize: BlockSize)
+                blockBody.affectedByGravity = false
+                blockBody.categoryBitMask = BlockCategory
+                blockBody.collisionBitMask = BallCategory
+                blockBody.contactTestBitMask = BallCategory
+                blockBody.dynamic = false
+                
+                block.physicsBody = blockBody
+                
                 addChild(block)
             }
         }
@@ -110,7 +138,12 @@ class GameScene: SKScene {
             let ballBody = SKPhysicsBody(circleOfRadius: BallSize.width / 2)
             ballBody.velocity = BallStartVelocity
             ballBody.affectedByGravity = false
+            ballBody.categoryBitMask = BallCategory
+            ballBody.collisionBitMask = PaddleCategory | BlockCategory
+            ballBody.contactTestBitMask = ballBody.collisionBitMask
             ballBody.usesPreciseCollisionDetection = true
+            
+            ball.physicsBody = ballBody
             
             addChild(ball)
         } else {
@@ -120,5 +153,35 @@ class GameScene: SKScene {
     }
     func setPaddlePosition(x:CGFloat) {
         paddle?.position.x = x
+    }
+    
+    func didBeginContact(contact: SKPhysicsContact) {
+        print("contactbegin", contact)
+        let node1 = contact.bodyA.node;
+        let node2 = contact.bodyB.node;
+        
+        var ball : SKNode?
+        var block : SKNode?
+        if (node1?.name == BlockName) {
+            ball = node2
+            block = node1
+        } else if (node2?.name == BlockName) {
+            ball = node1
+            block = node2
+        }
+        block?.removeFromParent()
+        
+        guard ball?.physicsBody != nil else {
+            return
+        }
+        let body = ball!.physicsBody!
+        let velocity = body.velocity
+        
+        let newVelocity = CGVector(dx: velocity.dx * -1, dy: velocity.dy * -1)
+        body.velocity = newVelocity
+    }
+    
+    func didEndContact(contact: SKPhysicsContact) {
+        print("contactend", contact)
     }
 }
