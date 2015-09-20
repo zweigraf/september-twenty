@@ -11,18 +11,25 @@ import SpriteKit
 class GameScene: SKScene {
     let PaddleColor = UIColor.redColor().colorWithAlphaComponent(0.5)
     let BlockColor = UIColor.greenColor().colorWithAlphaComponent(0.5)
+    let BallColor = UIColor.blueColor().colorWithAlphaComponent(0.5)
     
     let PaddleSize = CGSize(width: 200, height: 50)
     let BlockSize = CGSize(width: 100, height: 50)
+    let BallSize = CGSize(width: 25, height: 25)
     
     let PaddleBottomOffset = 50
     let BlockTopOffset = 68
     let BlockLeftOffset : CGFloat = 50
     let BlockRightOffset : CGFloat = 50
     let BlockRowCount = 4
+    let BallPaddleOffset = 50
+    
+    let BallStartVelocity = CGVector(dx: 0, dy: 100)
     
     let PaddleName = "paddle"
     let BlockName = "block"
+    let BallName = "ball"
+    
     
     weak var paddle : SKNode?
     
@@ -32,6 +39,10 @@ class GameScene: SKScene {
         
         addPaddle()
         addBlocks()
+        
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: Selector("addBall"))
+        tapRecognizer.numberOfTapsRequired = 2
+        self.view?.addGestureRecognizer(tapRecognizer)
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -89,6 +100,24 @@ class GameScene: SKScene {
         }
     }
     
+    func addBall() {
+        let ball = SKSpriteNode(color: BallColor, size: BallSize)
+        if let paddlePoint = paddle?.frame.origin {
+            ball.position = CGPoint(x: paddlePoint.x, y: paddlePoint.y + CGFloat(BallPaddleOffset))
+            
+            ball.name = BallName
+            
+            let ballBody = SKPhysicsBody(circleOfRadius: BallSize.width / 2)
+            ballBody.velocity = BallStartVelocity
+            ballBody.affectedByGravity = false
+            ballBody.usesPreciseCollisionDetection = true
+            
+            addChild(ball)
+        } else {
+            print("No Paddle")
+        }
+        
+    }
     func setPaddlePosition(x:CGFloat) {
         paddle?.position.x = x
     }
