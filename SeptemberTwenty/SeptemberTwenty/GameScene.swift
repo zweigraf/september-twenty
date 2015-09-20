@@ -23,7 +23,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let BlockLeftOffset : CGFloat = 50
     let BlockRightOffset : CGFloat = 50
     let BlockRowCount = 4
-    let BallPaddleOffset = 50
+    let BallPaddleOffset = 100
     
     let BallStartVelocity = CGVector(dx: 0, dy: 100)
     
@@ -91,7 +91,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let paddleBody = SKPhysicsBody(rectangleOfSize: PaddleSize)
         paddleBody.affectedByGravity = false
         paddleBody.categoryBitMask = PaddleCategory
-        paddleBody.collisionBitMask = BallCategory
+        paddleBody.collisionBitMask = 0x0
         paddleBody.contactTestBitMask = BallCategory
         paddleBody.dynamic = false
         
@@ -122,7 +122,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 let blockBody = SKPhysicsBody(rectangleOfSize: BlockSize)
                 blockBody.affectedByGravity = false
                 blockBody.categoryBitMask = BlockCategory
-                blockBody.collisionBitMask = BallCategory
+                blockBody.collisionBitMask = 0x0
                 blockBody.contactTestBitMask = BallCategory
                 blockBody.dynamic = false
                 
@@ -144,8 +144,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             ballBody.velocity = BallStartVelocity
             ballBody.affectedByGravity = false
             ballBody.categoryBitMask = BallCategory
-            ballBody.collisionBitMask = PaddleCategory | BlockCategory
-            ballBody.contactTestBitMask = ballBody.collisionBitMask
+            ballBody.collisionBitMask = 0x0
+            ballBody.contactTestBitMask = PaddleCategory | BlockCategory
             ballBody.usesPreciseCollisionDetection = true
             
             ball.physicsBody = ballBody
@@ -163,32 +163,66 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         paddle?.position.x = x
     }
     
+    func collideBall(ball: SKNode, withBlock block: SKNode) {
+        block.removeFromParent()
+        handleBallCollision(ball)
+    }
+    
+    func collideBall(ball: SKNode, withPaddle paddle: SKNode) {
+        
+        handleBallCollision(ball)
+    }
+    
+    func handleBallCollision(ball: SKNode) {
+        if let body = ball.physicsBody {
+            let velocity = body.velocity
+            
+            let newVelocity = CGVector(dx: velocity.dx * -1, dy: velocity.dy * -1)
+            body.velocity = newVelocity
+        }
+    }
+    
     // MARK: SKPhysicsContactsDelegate
     
     func didBeginContact(contact: SKPhysicsContact) {
-        print("contactbegin", contact)
-        let node1 = contact.bodyA.node;
-        let node2 = contact.bodyB.node;
+        let node1 = contact.bodyA.node
+        let node2 = contact.bodyB.node
         
-        var ball : SKNode?
-        var block : SKNode?
-        if (node1?.name == BlockName) {
-            ball = node2
-            block = node1
-        } else if (node2?.name == BlockName) {
-            ball = node1
-            block = node2
-        }
-        block?.removeFromParent()
-        
-        guard ball?.physicsBody != nil else {
+        guard node1?.name != nil && node2?.name != nil else {
             return
         }
-        let body = ball!.physicsBody!
-        let velocity = body.velocity
+        let name1 = node1!.name!
+        let name2 = node2!.name!
         
-        let newVelocity = CGVector(dx: velocity.dx * -1, dy: velocity.dy * -1)
-        body.velocity = newVelocity
+        switch name1 {
+        case BallName:
+            switch name2 {
+            case PaddleName:
+                collideBall(node1!, withPaddle: node2!)
+            case BlockName:
+                collideBall(node1!, withBlock: node2!)
+            default:
+                break
+            }
+        case PaddleName:
+            switch name2 {
+            case BallName:
+                collideBall(node2!, withPaddle: node1!)
+            default:
+                break
+            }
+        case BlockName:
+            switch name2 {
+            case BallName:
+                collideBall(node2!, withBlock: node1!)
+            default:
+                break
+            }
+        default:
+            break
+        }
+        
+        
     }
     
     func didEndContact(contact: SKPhysicsContact) {
