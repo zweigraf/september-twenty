@@ -104,8 +104,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let paddleBody = SKPhysicsBody(rectangleOfSize: PaddleSize)
         paddleBody.affectedByGravity = false
         paddleBody.categoryBitMask = PaddleCategory
-        paddleBody.collisionBitMask = 0x0
+        paddleBody.collisionBitMask = BallCategory
         paddleBody.contactTestBitMask = BallCategory
+        paddleBody.friction = 0.0
+        paddleBody.restitution = 1.0
         paddleBody.dynamic = false
         
         paddle.physicsBody = paddleBody
@@ -135,8 +137,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 let blockBody = SKPhysicsBody(rectangleOfSize: BlockSize)
                 blockBody.affectedByGravity = false
                 blockBody.categoryBitMask = BlockCategory
-                blockBody.collisionBitMask = 0x0
+                blockBody.collisionBitMask = BallCategory
                 blockBody.contactTestBitMask = BallCategory
+                blockBody.friction = 0.0
+                blockBody.restitution = 1.0
                 blockBody.dynamic = false
                 
                 block.physicsBody = blockBody
@@ -163,7 +167,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             ballBody.friction = 0.0
             
             ballBody.categoryBitMask = BallCategory
-            ballBody.collisionBitMask = WallsCategory
+            ballBody.collisionBitMask = WallsCategory | PaddleCategory | BlockCategory
             ballBody.contactTestBitMask = PaddleCategory | BlockCategory
             ballBody.usesPreciseCollisionDetection = true
             
@@ -184,12 +188,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func collideBall(ball: SKNode, withBlock block: SKNode) {
         block.removeFromParent()
-        handleBallCollision(ball)
+//        handleBallCollision(ball)
     }
     
     func collideBall(ball: SKNode, withPaddle paddle: SKNode) {
         
-        handleBallCollision(ball)
+//        handleBallCollision(ball)
     }
     
     func handleBallCollision(ball: SKNode) {
