@@ -25,7 +25,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let BlockRowCount = 4
     let BallPaddleOffset = 100
     
-    let BallStartVelocity = CGVector(dx: 0, dy: 100)
+    let BallStartVelocity = CGVector(dx: 0, dy: 300)
     
     let PaddleName = "paddle"
     let BlockName = "block"
@@ -141,8 +141,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             ball.name = BallName
             
             let ballBody = SKPhysicsBody(circleOfRadius: BallSize.width / 2)
+            
             ballBody.velocity = BallStartVelocity
             ballBody.affectedByGravity = false
+            ballBody.restitution = 0.0
+            ballBody.linearDamping = 0.0
+            ballBody.angularDamping = 0.0
+            
             ballBody.categoryBitMask = BallCategory
             ballBody.collisionBitMask = 0x0
             ballBody.contactTestBitMask = PaddleCategory | BlockCategory
