@@ -9,6 +9,7 @@
 import SpriteKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
+    // MARK: Constants
     let PaddleColor = UIColor.redColor().colorWithAlphaComponent(0.5)
     let BlockColor = UIColor.greenColor().colorWithAlphaComponent(0.5)
     let BallColor = UIColor.blueColor().colorWithAlphaComponent(0.5)
@@ -35,6 +36,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let BallCategory : UInt32 = 1 << 2
     
     weak var paddle : SKNode?
+    
+    // MARK: SKScene Overrides
     
     override func didMoveToView(view: SKView) {
         scaleMode = .AspectFit
@@ -70,6 +73,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
     }
+    
+    // MARK: SKNode Creation
     
     func addGrid() {
         let grid = GridGenerator.createGrid(self.frame, step: 50)
@@ -151,9 +156,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
     }
+    
+    // MARK: State methods
+    
     func setPaddlePosition(x:CGFloat) {
         paddle?.position.x = x
     }
+    
+    // MARK: SKPhysicsContactsDelegate
     
     func didBeginContact(contact: SKPhysicsContact) {
         print("contactbegin", contact)
