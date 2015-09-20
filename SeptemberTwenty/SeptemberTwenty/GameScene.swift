@@ -30,11 +30,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let PaddleName = "paddle"
     let BlockName = "block"
     let BallName = "ball"
+    let LoseSensorName = "losesensor"
     
     let PaddleCategory : UInt32 = 1 << 0
     let BlockCategory : UInt32 = 1 << 1
     let BallCategory : UInt32 = 1 << 2
     let WallsCategory : UInt32 = 1 << 3
+    let LoseSensorCategory : UInt32 = 1 << 4
     
     weak var paddle : SKNode?
     
@@ -48,6 +50,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         addPaddle()
         addBlocks()
+        
+        addLoseSensor()
         
         self.physicsWorld.contactDelegate = self
         
@@ -168,7 +172,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             ballBody.categoryBitMask = BallCategory
             ballBody.collisionBitMask = WallsCategory | PaddleCategory | BlockCategory
-            ballBody.contactTestBitMask = PaddleCategory | BlockCategory
+            ballBody.contactTestBitMask = PaddleCategory | BlockCategory | LoseSensorCategory
             ballBody.usesPreciseCollisionDetection = true
             
             ball.physicsBody = ballBody
@@ -178,6 +182,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             print("No Paddle")
         }
         
+    }
+    
+    func addLoseSensor() {
+        let x0 = self.frame.origin.x
+        let x1 = x0 + self.frame.size.width
+        let y = self.frame.origin.y
+        
+        let loseSensor = SKNode()
+        
+        loseSensor.name = LoseSensorName
+        
+        let body = SKPhysicsBody(edgeFromPoint: CGPoint(x: x0, y: y + 10), toPoint: CGPoint(x: x1, y: y + 10))
+        body.collisionBitMask = 0x0
+        body.contactTestBitMask = BallCategory
+        
+        loseSensor.physicsBody = body
+        
+        addChild(loseSensor)
     }
     
     // MARK: State methods
@@ -194,13 +216,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
     }
     
-    func handleBallCollision(ball: SKNode) {
-        if let body = ball.physicsBody {
-            let velocity = body.velocity
-            let newVelocity = CGVector(dx: velocity.dx * -1, dy: velocity.dy * -1)
-        
-            body.velocity = newVelocity
-        }
+    func collideBall(ball: SKNode, withSensor sensor: SKNode) {
+        ball.removeFromParent()
     }
     
     // MARK: SKPhysicsContactsDelegate
@@ -222,6 +239,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 collideBall(node1!, withPaddle: node2!)
             case BlockName:
                 collideBall(node1!, withBlock: node2!)
+            case LoseSensorName:
+                collideBall(node1!, withSensor: node2!)
             default:
                 break
             }
@@ -236,6 +255,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             switch name2 {
             case BallName:
                 collideBall(node2!, withBlock: node1!)
+            default:
+                break
+            }
+        case LoseSensorName:
+            switch name2 {
+            case BallName:
+                collideBall(node2!, withSensor: node1!)
             default:
                 break
             }
