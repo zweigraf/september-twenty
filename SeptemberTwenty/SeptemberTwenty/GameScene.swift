@@ -8,15 +8,16 @@
 
 import SpriteKit
 
+
 class GameScene: SKScene, SKPhysicsContactDelegate {
     // MARK: Constants
     let PaddleColor = UIColor.redColor().colorWithAlphaComponent(0.5)
     let BlockColor = UIColor.greenColor().colorWithAlphaComponent(0.5)
     let BallColor = UIColor.blueColor().colorWithAlphaComponent(0.5)
     
-    let PaddleSize = CGSize(width: 200, height: 50)
+    let PaddleSize = CGSize(width: 200, height: 25)
     let BlockSize = CGSize(width: 100, height: 50)
-    let BallSize = CGSize(width: 25, height: 25)
+    let BallSize = CGSize(width: 20, height: 20)
     
     let PaddleBottomOffset = 50
     let BlockTopOffset = 68
@@ -100,12 +101,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func addPaddle() {
-        let paddle = SKSpriteNode(color: PaddleColor, size: PaddleSize)
+        let texture = SKTexture(imageNamed: "Paddle_Blue")
+        let paddle = SKSpriteNode(texture: texture)
         paddle.position = CGPoint(x: Int(CGRectGetMidX(self.frame)), y: PaddleBottomOffset)
         
         paddle.name = PaddleName
         
-        let paddleBody = SKPhysicsBody(rectangleOfSize: PaddleSize)
+        let paddleBody = SKPhysicsBody(texture: texture, size: PaddleSize)
         paddleBody.affectedByGravity = false
         paddleBody.categoryBitMask = PaddleCategory
         paddleBody.collisionBitMask = BallCategory
@@ -133,7 +135,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         for var y = yOfFirstBlock; y >= yOfLastBlock; y -= BlockSize.height {
             for var x = xOfFirstBlock; x <= xOfLastBlock; x += BlockSize.width {
-                let block = SKSpriteNode(color: BlockColor, size: BlockSize)
+                let block = SKSpriteNode(imageNamed: "Block_Yellow")
                 block.position = CGPoint(x: x, y: y)
                 
                 block.name = BlockName;
@@ -155,7 +157,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func addBall() {
-        let ball = SKSpriteNode(color: BallColor, size: BallSize)
+        let ball = SKSpriteNode(imageNamed: "Ball_Grey")
         if let paddlePoint = paddle?.frame.origin {
             ball.position = CGPoint(x: paddlePoint.x, y: paddlePoint.y + CGFloat(BallPaddleOffset))
             
