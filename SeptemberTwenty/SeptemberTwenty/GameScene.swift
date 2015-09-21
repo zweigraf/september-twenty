@@ -207,7 +207,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // MARK: State methods
     
     func setPaddlePosition(x:CGFloat) {
-        paddle?.position.x = x
+        let min = CGRectGetMinX(self.frame) + (PaddleSize.width / 2)
+        let max = CGRectGetMaxX(self.frame) - (PaddleSize.width / 2)
+        let newX = clamp(x, lower: min, upper: max)
+        paddle?.position.x = newX
     }
     
     func collideBall(ball: SKNode, withBlock block: SKNode) {
@@ -276,7 +279,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func didEndContact(contact: SKPhysicsContact) {
 //        print("contactend", contact)
+        
+        
     }
     
+    // MARK: Helper
     
+    ///From https://gist.github.com/leemorgan/bf1a0a1a8b2c94bce310
+    ///Returns the input value clamped to the lower and upper limits.
+    func clamp<T: Comparable>(value: T, lower: T, upper: T) -> T {
+        return min(max(value, lower), upper)
+    }
+
 }
