@@ -167,7 +167,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             ballBody.velocity = BallStartVelocity
             ballBody.affectedByGravity = false
-            ballBody.restitution = 0.0
+            ballBody.restitution = 1.0
             ballBody.linearDamping = 0.0
             ballBody.angularDamping = 0.0
             ballBody.friction = 0.0
