@@ -10,18 +10,18 @@ import SpriteKit
 
 class GridGenerator: NSObject {
     static var gridLineWidth = 2
-    static var gridLineColor = UIColor.blackColor().colorWithAlphaComponent(0.5)
-    static var gridTextFontSize = UIFont.smallSystemFontSize()
+    static var gridLineColor = UIColor.black.withAlphaComponent(0.5)
+    static var gridTextFontSize = UIFont.smallSystemFontSize
     static var gridTextLeftOffset = CGFloat(50)
     static var gridTextBottomOffset = CGFloat(50)
     
-    static func createGrid(frame: CGRect, step: CGFloat) ->  SKNode {
-        let minX = CGRectGetMinX(frame)
-        let maxX = CGRectGetMaxX(frame)
-        let midX = CGRectGetMidX(frame)
-        let minY = CGRectGetMinY(frame)
-        let maxY = CGRectGetMaxY(frame)
-        let midY = CGRectGetMidY(frame)
+    static func createGrid(_ frame: CGRect, step: CGFloat) ->  SKNode {
+        let minX = frame.minX
+        let maxX = frame.maxX
+        let midX = frame.midX
+        let minY = frame.minY
+        let maxY = frame.maxY
+        let midY = frame.midY
         
         let grid = SKNode()
         
@@ -29,7 +29,7 @@ class GridGenerator: NSObject {
             x = min(x, maxX)
             let y = midY
             
-            let node = SKSpriteNode(color: gridLineColor, size: CGSize(width: gridLineWidth, height: Int(CGRectGetHeight(frame))))
+            let node = SKSpriteNode(color: gridLineColor, size: CGSize(width: gridLineWidth, height: Int(frame.height)))
             node.position = CGPoint(x: x, y: y)
             grid.addChild(node)
             
@@ -42,7 +42,7 @@ class GridGenerator: NSObject {
             y = min(y, maxY)
             let x = midX
             
-            let node = SKSpriteNode(color: gridLineColor, size: CGSize(width: Int(CGRectGetWidth(frame)), height: gridLineWidth))
+            let node = SKSpriteNode(color: gridLineColor, size: CGSize(width: Int(frame.width), height: gridLineWidth))
             node.position = CGPoint(x: x, y: y)
             grid.addChild(node)
             
@@ -54,7 +54,7 @@ class GridGenerator: NSObject {
         return grid
     }
     
-    private static func createLabel(text: String) -> SKNode {
+    fileprivate static func createLabel(_ text: String) -> SKNode {
         let label = SKLabelNode(text: text)
         label.fontColor = gridLineColor
         label.fontSize = gridTextFontSize

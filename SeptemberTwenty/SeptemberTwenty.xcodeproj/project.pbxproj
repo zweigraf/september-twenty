@@ -16,7 +16,7 @@
 		A5A869A81BAF197C00027DF4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A5A869A61BAF197C00027DF4 /* LaunchScreen.storyboard */; };
 		A5A869B31BAF197C00027DF4 /* SeptemberTwentyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A869B21BAF197C00027DF4 /* SeptemberTwentyTests.swift */; };
 		A5A869BE1BAF197C00027DF4 /* SeptemberTwentyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A869BD1BAF197C00027DF4 /* SeptemberTwentyUITests.swift */; };
-		A5A869CC1BAF1A8F00027DF4 /* GridGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A869CB1BAF1A8F00027DF4 /* GridGenerator.swift */; settings = {ASSET_TAGS = (); }; };
+		A5A869CC1BAF1A8F00027DF4 /* GridGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A869CB1BAF1A8F00027DF4 /* GridGenerator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -201,13 +201,16 @@
 				TargetAttributes = {
 					A5A869951BAF197C00027DF4 = {
 						CreatedOnToolsVersion = 7.0;
+						LastSwiftMigration = 0820;
 					};
 					A5A869AD1BAF197C00027DF4 = {
 						CreatedOnToolsVersion = 7.0;
+						LastSwiftMigration = 0820;
 						TestTargetID = A5A869951BAF197C00027DF4;
 					};
 					A5A869B81BAF197C00027DF4 = {
 						CreatedOnToolsVersion = 7.0;
+						LastSwiftMigration = 0820;
 						TestTargetID = A5A869951BAF197C00027DF4;
 					};
 				};
@@ -414,6 +417,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zweigraf.SeptemberTwenty;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -425,6 +429,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zweigraf.SeptemberTwenty;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -437,6 +442,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zweigraf.SeptemberTwentyTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SeptemberTwenty.app/SeptemberTwenty";
 			};
 			name = Debug;
@@ -449,6 +455,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zweigraf.SeptemberTwentyTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SeptemberTwenty.app/SeptemberTwenty";
 			};
 			name = Release;
@@ -461,6 +468,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zweigraf.SeptemberTwentyUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_TARGET_NAME = SeptemberTwenty;
 				USES_XCTRUNNER = YES;
 			};
@@ -473,6 +481,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zweigraf.SeptemberTwentyUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_TARGET_NAME = SeptemberTwenty;
 				USES_XCTRUNNER = YES;
 			};
@@ -497,6 +506,7 @@
 				A5A869C41BAF197C00027DF4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A5A869C51BAF197C00027DF4 /* Build configuration list for PBXNativeTarget "SeptemberTwentyTests" */ = {
 			isa = XCConfigurationList;
@@ -505,6 +515,7 @@
 				A5A869C71BAF197C00027DF4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A5A869C81BAF197C00027DF4 /* Build configuration list for PBXNativeTarget "SeptemberTwentyUITests" */ = {
 			isa = XCConfigurationList;
@@ -513,6 +524,7 @@
 				A5A869CA1BAF197C00027DF4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

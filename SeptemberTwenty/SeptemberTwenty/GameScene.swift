@@ -11,9 +11,9 @@ import SpriteKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     // MARK: Constants
-    let PaddleColor = UIColor.redColor().colorWithAlphaComponent(0.5)
-    let BlockColor = UIColor.greenColor().colorWithAlphaComponent(0.5)
-    let BallColor = UIColor.blueColor().colorWithAlphaComponent(0.5)
+    let PaddleColor = UIColor.red.withAlphaComponent(0.5)
+    let BlockColor = UIColor.green.withAlphaComponent(0.5)
+    let BallColor = UIColor.blue.withAlphaComponent(0.5)
     
     let PaddleSize = CGSize(width: 200, height: 25)
     let BlockSize = CGSize(width: 100, height: 50)
@@ -43,8 +43,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // MARK: SKScene Overrides
     
-    override func didMoveToView(view: SKView) {
-        scaleMode = .AspectFit
+    override func didMove(to view: SKView) {
+        scaleMode = .aspectFit
         
         addWalls()
         addGrid()
@@ -56,29 +56,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         self.physicsWorld.contactDelegate = self
         
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: Selector("addBall"))
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(GameScene.addBall))
         tapRecognizer.numberOfTapsRequired = 2
         self.view?.addGestureRecognizer(tapRecognizer)
     }
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
        /* Called when a touch begins */
         
         if let touch = touches.first {
-            let location = touch.locationInNode(self)
+            let location = touch.location(in: self)
             
             setPaddlePosition(location.x)
         }
     }
     
-    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let touch = touches.first {
-            let location = touch.locationInNode(self)
+            let location = touch.location(in: self)
             setPaddlePosition(location.x)
         }
     }
    
-    override func update(currentTime: CFTimeInterval) {
+    override func update(_ currentTime: TimeInterval) {
         /* Called before each frame is rendered */
     }
     
@@ -86,7 +86,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func addWalls() {
         // just normal walls for the ball to reflect from
-        let walls = SKPhysicsBody(edgeLoopFromRect: self.frame)
+        let walls = SKPhysicsBody(edgeLoopFrom: self.frame)
         walls.categoryBitMask = WallsCategory
         walls.collisionBitMask = BallCategory
         walls.friction = 0.0
@@ -103,7 +103,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func addPaddle() {
         let texture = SKTexture(imageNamed: "Paddle_Blue")
         let paddle = SKSpriteNode(texture: texture)
-        paddle.position = CGPoint(x: Int(CGRectGetMidX(self.frame)), y: PaddleBottomOffset)
+        paddle.position = CGPoint(x: Int(self.frame.midX), y: PaddleBottomOffset)
         
         paddle.name = PaddleName
         
@@ -114,7 +114,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         paddleBody.contactTestBitMask = BallCategory
         paddleBody.friction = 0.0
         paddleBody.restitution = 1.0
-        paddleBody.dynamic = false
+        paddleBody.isDynamic = false
         
         paddle.physicsBody = paddleBody
         
@@ -130,7 +130,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let xOfFirstBlock = self.frame.origin.x + BlockLeftOffset + ((space - widthOfRow) / 2) + (BlockSize.width / 2)
         let xOfLastBlock = xOfFirstBlock + (CGFloat(numberOfBlocksInRow - 1) * BlockSize.width)
         
-        let yOfFirstBlock = CGRectGetMaxY(self.frame) - CGFloat(BlockTopOffset) - (BlockSize.height / 2)
+        let yOfFirstBlock = self.frame.maxY - CGFloat(BlockTopOffset) - (BlockSize.height / 2)
         let yOfLastBlock = yOfFirstBlock - (CGFloat(BlockRowCount - 1) * BlockSize.height)
         
         for var y = yOfFirstBlock; y >= yOfLastBlock; y -= BlockSize.height {
@@ -140,14 +140,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
                 block.name = BlockName;
                 
-                let blockBody = SKPhysicsBody(rectangleOfSize: BlockSize)
+                let blockBody = SKPhysicsBody(rectangleOf: BlockSize)
                 blockBody.affectedByGravity = false
                 blockBody.categoryBitMask = BlockCategory
                 blockBody.collisionBitMask = BallCategory
                 blockBody.contactTestBitMask = BallCategory
                 blockBody.friction = 0.0
                 blockBody.restitution = 1.0
-                blockBody.dynamic = false
+                blockBody.isDynamic = false
                 
                 block.physicsBody = blockBody
                 
@@ -195,7 +195,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         loseSensor.name = LoseSensorName
         
-        let body = SKPhysicsBody(edgeFromPoint: CGPoint(x: x0, y: y + 10), toPoint: CGPoint(x: x1, y: y + 10))
+        let body = SKPhysicsBody(edgeFrom: CGPoint(x: x0, y: y + 10), to: CGPoint(x: x1, y: y + 10))
         body.collisionBitMask = 0x0
         body.contactTestBitMask = BallCategory
         
@@ -206,28 +206,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // MARK: State methods
     
-    func setPaddlePosition(x:CGFloat) {
-        let min = CGRectGetMinX(self.frame) + (PaddleSize.width / 2)
-        let max = CGRectGetMaxX(self.frame) - (PaddleSize.width / 2)
+    func setPaddlePosition(_ x:CGFloat) {
+        let min = self.frame.minX + (PaddleSize.width / 2)
+        let max = self.frame.maxX - (PaddleSize.width / 2)
         let newX = clamp(x, lower: min, upper: max)
         paddle?.position.x = newX
     }
     
-    func collideBall(ball: SKNode, withBlock block: SKNode) {
+    func collideBall(_ ball: SKNode, withBlock block: SKNode) {
         block.removeFromParent()
     }
     
-    func collideBall(ball: SKNode, withPaddle paddle: SKNode) {
+    func collideBall(_ ball: SKNode, withPaddle paddle: SKNode) {
         
     }
     
-    func collideBall(ball: SKNode, withSensor sensor: SKNode) {
+    func collideBall(_ ball: SKNode, withSensor sensor: SKNode) {
         ball.removeFromParent()
     }
     
     // MARK: SKPhysicsContactsDelegate
     
-    func didBeginContact(contact: SKPhysicsContact) {
+    func didBegin(_ contact: SKPhysicsContact) {
         let node1 = contact.bodyA.node
         let node2 = contact.bodyB.node
         
@@ -277,7 +277,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
     }
     
-    func didEndContact(contact: SKPhysicsContact) {
+    func didEnd(_ contact: SKPhysicsContact) {
 //        print("contactend", contact)
         
         
@@ -287,7 +287,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     ///From https://gist.github.com/leemorgan/bf1a0a1a8b2c94bce310
     ///Returns the input value clamped to the lower and upper limits.
-    func clamp<T: Comparable>(value: T, lower: T, upper: T) -> T {
+    func clamp<T: Comparable>(_ value: T, lower: T, upper: T) -> T {
         return min(max(value, lower), upper)
     }
 
