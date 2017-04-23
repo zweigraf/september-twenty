@@ -25,7 +25,8 @@ class GridGenerator: NSObject {
         
         let grid = SKNode()
         
-        for var x = minX; x < maxX + step; x += step {
+        var x = minX
+        while x < maxX {
             x = min(x, maxX)
             let y = midY
             
@@ -36,9 +37,12 @@ class GridGenerator: NSObject {
             let label = createLabel("\(Int(x))")
             label.position = CGPoint(x: x, y: minY - gridTextBottomOffset)
             grid.addChild(label)
+            
+            x += step
         }
         
-        for var y = minY; y < maxY + step; y += step {
+        var y = minY
+        while y < maxY + step {
             y = min(y, maxY)
             let x = midX
             
@@ -49,6 +53,8 @@ class GridGenerator: NSObject {
             let label = createLabel("\(Int(y))")
             label.position = CGPoint(x: minX - gridTextLeftOffset, y: y)
             grid.addChild(label)
+            
+            y += step
         }
         
         return grid

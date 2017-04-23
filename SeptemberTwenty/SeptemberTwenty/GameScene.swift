@@ -26,7 +26,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let BlockRowCount = 4
     let BallPaddleOffset = 100
     
-    let BallStartVelocity = CGVector(dx: 50, dy: 300)
+    let BallStartVelocity = CGVector(dx: 500, dy: 3000)
     
     let PaddleName = "paddle"
     let BlockName = "block"
@@ -55,6 +55,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addLoseSensor()
         
         self.physicsWorld.contactDelegate = self
+        physicsWorld.speed = 0.1
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(GameScene.addBall))
         tapRecognizer.numberOfTapsRequired = 2
@@ -133,8 +134,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let yOfFirstBlock = self.frame.maxY - CGFloat(BlockTopOffset) - (BlockSize.height / 2)
         let yOfLastBlock = yOfFirstBlock - (CGFloat(BlockRowCount - 1) * BlockSize.height)
         
-        for var y = yOfFirstBlock; y >= yOfLastBlock; y -= BlockSize.height {
-            for var x = xOfFirstBlock; x <= xOfLastBlock; x += BlockSize.width {
+        var y = yOfFirstBlock
+        while y >= yOfLastBlock {
+            var x = xOfFirstBlock
+            while x <= xOfLastBlock {
                 let block = SKSpriteNode(imageNamed: "Block_Yellow")
                 block.position = CGPoint(x: x, y: y)
                 
@@ -152,7 +155,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 block.physicsBody = blockBody
                 
                 addChild(block)
+                
+                x += BlockSize.width
             }
+            
+            y -= BlockSize.height
         }
     }
     
